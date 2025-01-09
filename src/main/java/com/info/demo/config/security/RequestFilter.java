@@ -4,7 +4,7 @@ import com.info.demo.config.ApiRequestHolder;
 import com.info.demo.config.HTTPHelper;
 import com.info.demo.config.MCbsApiChannel;
 import com.info.demo.repository.CommonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +12,23 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class RequestFilter implements Filter {
 
 	private MCbsApiChannel localReq = null;
 	
-	@Autowired
-	private CommonRepository commonRepository;
+	private final CommonRepository commonRepository;
 	
 	@Value("${api_channel}")
 	private String channel;
 	
 	@Value("${api_channel_user}")
 	private String user;
+
+	public RequestFilter(CommonRepository commonRepository) {
+		this.commonRepository = commonRepository;
+	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -43,7 +47,7 @@ public class RequestFilter implements Filter {
 			chain.doFilter(request, response);
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error("Error in RequestFilter: Error = " + ex.getMessage());
 		} finally {
 			ApiRequestHolder.removeToken();
 		}
