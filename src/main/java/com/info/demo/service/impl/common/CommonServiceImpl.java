@@ -8,7 +8,6 @@ import com.info.demo.service.common.CommonService;
 import com.info.demo.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +22,11 @@ public class CommonServiceImpl implements CommonService {
 
     public static final Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
-    @Autowired
-    private CommonRepository commonRepository;
+    private final CommonRepository commonRepository;
+
+    public CommonServiceImpl(CommonRepository commonRepository) {
+        this.commonRepository = commonRepository;
+    }
 
 
     @Override

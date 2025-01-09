@@ -3,7 +3,6 @@ package com.info.demo.service.impl.common;
 import com.info.demo.entity.Branch;
 import com.info.demo.repository.BranchRepository;
 import com.info.demo.service.common.BranchService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,11 @@ import java.util.stream.Collectors;
 @Service
 public class BranchServiceImpl implements BranchService {
 
-    @Autowired
-    private BranchRepository branchRepository;
+    private final BranchRepository branchRepository;
+
+    public BranchServiceImpl(BranchRepository branchRepository) {
+        this.branchRepository = branchRepository;
+    }
 
 
     @Override
