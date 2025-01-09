@@ -10,4 +10,11 @@ public class RemittanceDataStatus {
     public static final String UNLOCK = "UNLOCK";
     public static final String UNLOCK_REQUESTED = "UNLOCK_REQUESTED";
     public static final String UNLOCK_NOTIFIED = "UNLOCK_NOTIFIED";
+
+    public static final String BEFTN = "BEFTN";
+    public static final String EFT = "EFT";
+
+    public static final String PAID = "PAID";
+    public static final String RECEIVED = "RECEIVED";
+    public static final String REJECTED = "REJECTED";
 }
