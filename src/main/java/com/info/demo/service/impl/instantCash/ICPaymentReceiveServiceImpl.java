@@ -62,7 +62,10 @@ public class ICPaymentReceiveServiceImpl implements ICPaymentReceiveService {
 
 
     //    @Override
-    @Deprecated
+    /**
+     * This method is deprecated since version 1.5 and will be removed in a future release.
+     */
+    @Deprecated(since = "1.5", forRemoval = true)
     public List<RemittanceData> paymentReceive(ExchangeHouseProperty exchangeHouseProperty, List<RemittanceData> remittanceDataList, final String key, final String password) {
 
         List<ApiTrace> apiTraceList = new ArrayList<>();

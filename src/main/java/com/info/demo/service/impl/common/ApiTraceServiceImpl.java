@@ -12,19 +12,23 @@ import com.info.demo.util.DateUtil;
 import com.info.demo.util.ObjectConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
 
 @Service
+@Transactional
 public class ApiTraceServiceImpl implements ApiTraceService {
     private static final Logger logger = LoggerFactory.getLogger(ApiTraceServiceImpl.class);
 
-    @Autowired
-    private ApiTraceRepository apiTraceRepository;
+    private final ApiTraceRepository apiTraceRepository;
+
+    public ApiTraceServiceImpl(ApiTraceRepository apiTraceRepository) {
+        this.apiTraceRepository = apiTraceRepository;
+    }
 
     @Override
     public Optional<ApiTrace> findById(Long apiTraceId) {
