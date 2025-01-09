@@ -87,7 +87,7 @@ public class ICOutstandingRemittanceMapper {
                 remittanceData.setReceiverAddress(buildFullName(address.getAddressLine1(), address.getAddressLine2()));
             }
         } catch (Exception e) {
-            logger.error("Error in mapBeneficiaryInfo()", e);
+            logger.error("Error in mapBeneficiaryInfo() {} ", e.getMessage());
         }
     }
 
@@ -136,7 +136,7 @@ public class ICOutstandingRemittanceMapper {
                 remittanceData.setBranchName(bankName);
             }
         } catch (Exception e) {
-            logger.error("Error in mapBankBranchInfo()", e);
+            logger.error("Error in mapBankBranchInfo() {}", e.getMessage());
         }
     }
 

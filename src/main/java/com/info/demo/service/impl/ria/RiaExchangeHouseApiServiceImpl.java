@@ -84,7 +84,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             if (cashPickUpSearchResponse != null) {
                 logger.info("response is not empty....");
                 if (cashPickUpSearchResponse.getErrors() == null && cashPickUpSearchResponse.getResponse() != null) {
-                    logger.info("response = " + cashPickUpSearchResponse.getResponse().toString());
+                    logger.info("response: {} ", cashPickUpSearchResponse.getResponse().toString());
                     CashPickUpSearchDTO cashPickUpSearchDTO = cashPickUpSearchResponse.getResponse();
                     if (cashPickUpSearchDTO != null) {
 
@@ -174,7 +174,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                 response.setApiStatus(Constants.API_STATUS_INVALID);
             }
         } catch (Exception e) {
-            logger.error("RiaClient: searchRemittance():Exception = " + e);
+            logger.info("RiaClient: searchRemittance(): {} ", e.getMessage());
             response.setPayoutStatus(null);
             response.setErrorMessage("");
             response.setApiStatus(Constants.API_STATUS_ERROR);
@@ -186,7 +186,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             if (Objects.nonNull(cashPickUpSearchResponse))
                 response.setOriginalResponse(convertObjectToString(cashPickUpSearchResponse));
         } catch (Exception e) {
-            logger.error("Error in request response data transforming. Error = " + e);
+            logger.error("Error in request response data transforming: {} ", e.getMessage());
         }
         logger.info("Exit from searchRemittance() ");
         return response;
@@ -225,7 +225,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             ResponseEntity<CashPickUpPaymentResponse> apiResponse = restTemplate.exchange(riaExchangeProperties.getPaymentUrl(), HttpMethod.POST, httpEntity, CashPickUpPaymentResponse.class);
 
             if (apiResponse.getStatusCode() == HttpStatus.REQUEST_TIMEOUT || apiResponse.getStatusCode() == HttpStatus.GATEWAY_TIMEOUT) {
-                logger.info("API Server did not return any response. StatusCode:" + apiResponse.getStatusCode());
+                logger.info("API Server did not return any response. StatusCode: {} ", apiResponse.getStatusCode());
                 response.setPayoutStatus(null);
                 response.setErrorMessage("API Server did not return any response. StatusCode:" + apiResponse.getStatusCode());
                 response.setApiStatus(Constants.API_STATUS_ERROR_TIMEOUT);
@@ -275,7 +275,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                 response.setApiStatus(Constants.API_STATUS_INVALID);
             }
         } catch (Exception e) {
-            logger.error("RiaClient: payRemittance():Exception = " + e);
+            logger.error("RiaClient: payRemittance(): {} ", e.getMessage());
             response.setPayoutStatus(null);
             response.setErrorMessage("");
             response.setApiStatus(Constants.API_STATUS_ERROR);
@@ -286,7 +286,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             if (Objects.nonNull(cashPickUpPaymentResponse))
                 response.setOriginalResponse(convertObjectToString(cashPickUpPaymentResponse));
         } catch (Exception e) {
-            logger.error("Error in request response data transforming. Error = " + e);
+            logger.error("Error in request response data transforming: {}", e.getMessage());
         }
         return response;
     }
@@ -340,8 +340,6 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
 
             String beneCustRelationship = StringUtil.capitalizeFirstLetter(paymentApiRequest.getBeneCustRelationship());
             boolean isRelationFound = Arrays.stream(Constants.BENE_CUST_RELATIONSHIP).anyMatch(beneCustRelationship::equals);
-            // logger.info("beneCustRelationship = " + beneCustRelationship+",
-            // isRelationFound = "+isRelationFound);
 
             if (isRelationFound) {
                 cashPickUpPaymentRequestBody.setBeneCustRelationship(beneCustRelationship);
@@ -361,7 +359,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             cashPickUpPaymentRequestBody.setBeneStateOfBirth(cashPickUpSearchDTO.getBeneState());
             cashPickUpPaymentRequestBody.setBeneCityOfBirth(cashPickUpSearchDTO.getBeneState());
         } catch (Exception e) {
-            logger.error("Error in makingPaymentRequestBody. Error = " + e);
+            logger.error("Error in makingPaymentRequestBody: {} ", e.getMessage());
             cashPickUpPaymentRequestBody = new CashPickUpPaymentRequest();
         }
 
@@ -402,7 +400,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                 CashPickUpCancelResponse apiResponseBody = apiResponse.getBody();
                 if (apiResponseBody.getErrors() == null && apiResponseBody.getResponse() != null) {
                     CashPickUpCancelDTO cashPickUpCancelDTO = apiResponseBody.getResponse();
-                    logger.info("cashPickUpCancelDTO.getResponseCode() = " + cashPickUpCancelDTO.getResponseCode());
+                    logger.info("cashPickUpCancelDTO.getResponseCode(): {} ", cashPickUpCancelDTO.getResponseCode());
                     logger.info("cashPickUpCancelDTO = " + cashPickUpCancelDTO.toString());
                     if ("1000".equals(cashPickUpCancelDTO.getResponseCode())) {
                         response = true;
@@ -410,10 +408,10 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                 }
             }
         } catch (Exception e) {
-            logger.error("RiaClient: cancelRemittance():Exception = " + e);
+            logger.error("RiaClient: cancelRemittance():{} ", e.getMessage());
         } finally {
             apiTraceService.saveRequestResponse(apiTrace.getId(), exchangeCode, convertObjectToString(cashPickUpCancelRequestBody), responseData, apiTrace.getRequestType());
-            logger.info("cancelRemittance() API request data is -----------------------------> \r\n" + convertObjectToString(cashPickUpCancelRequestBody) + " \n\nResponse: \r\n" + convertObjectToString(responseData));
+            logger.info("cancelRemittance() API request data is ---------------> \r\n" + convertObjectToString(cashPickUpCancelRequestBody) + " \n\nResponse: \r\n" + convertObjectToString(responseData));
         }
         return response;
     }
@@ -491,7 +489,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
 
     @Override
     public StopRemittanceData notifyCancelStatus(StopRemittanceData data, RiaExchangePropertyDTO riaProperties) {
-        logger.info("Enter into notifyCancelStatus(): excode: " + data.getExchangeCode());
+        logger.info("Enter into notifyCancelStatus(): {} ", data.getExchangeCode());
 
         ApiTrace trace = null;
         String date = DateUtil.currentDateTime("yyyyMMdd");
@@ -513,9 +511,9 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             response = restTemplate.postForObject(riaProperties.getNotifyCancelReqUrl(), httpEntity, CancelNotifyResponses.class);
 
             if (Objects.nonNull(response)) {
-                logger.info("response is not empty...." + response);
+                logger.info("response is not empty.. {}", response);
                 if (Objects.isNull(response.getErrors()) && Objects.nonNull(response.getResponse())) {
-                    logger.info("response = " + response.getResponse().toString());
+                    logger.info("response: {}", response.getResponse().toString());
                     CancelNotifyResponse dto = response.getResponse();
                     if (dto != null) {
                         if (!"1000".equals(dto.getNotificationCode())) {
@@ -528,7 +526,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                 }
             }
         } catch (Exception ex) {
-            logger.error("Error orccured on calling notifyCancelStatus", ex);
+            logger.error("Error orccured on calling notifyCancelStatus {}", ex.getMessage());
         } finally {
             apiTraceService.saveApiTrace(trace, riaProperties.getExchangeCode(), convertObjectToString(request), convertObjectToString(response), null, Constants.REQUEST_TYPE_CANCEL_REQ_RES, null);
             logger.info("API request data is -----> \r\n" + convertObjectToString(request) + " \n\nResponse: \r\n" + convertObjectToString(response));
@@ -579,7 +577,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
 
                 HttpEntity<OrderReceivedStatusRequest> httpEntity = new HttpEntity<>(req, ApiUtil.createRiaHeader(apiTrace.getId(), RIA_EXCHANGE_HOUSE_BRANCH_USER, RIA_EXCHANGE_HOUSE_BRANCH_USER_DEVICE_ID, dateTime, riaProperties));
 
-                logger.info("Notify Received Status Request Body " + req);
+                logger.info("Notify Received Status Request Body {}", req);
                 ResponseEntity<OrderStatusResponse> responseEntity = restTemplate.exchange(riaProperties.getNotifyRemStatusUrl(), HttpMethod.POST, httpEntity, OrderStatusResponse.class);
 
                 apiTraceList.add(buildApiTrace(apiTrace, rem.getExchangeCode(), req, responseEntity, businessDate));
@@ -587,12 +585,12 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                 if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
                     OrderStatusResponse response = responseEntity.getBody();
                     if (Objects.nonNull(response)) {
-                        logger.info("Notification Response data:" + response);
+                        logger.info("Notification Response data: {}", response);
                     } else {
-                        logger.error("Response body contains empty response against: " + rem.getReferenceNo());
+                        logger.error("Response body contains empty response against: {} ", rem.getReferenceNo());
                     }
                 } else {
-                    logger.error("API Responded with different status code: " + responseEntity.getStatusCode());
+                    logger.error("API Responded with different status code: {}", responseEntity.getStatusCode());
                 }
             }
         } catch (Exception ex) {
@@ -634,11 +632,11 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             req.setNotificationID(String.valueOf(apiTrace.getId()));
             HttpEntity<OrderStatusRequest> httpEntity = new HttpEntity<>(req, ApiUtil.createRiaHeader(apiTrace.getId(), RIA_EXCHANGE_HOUSE_BRANCH_USER, RIA_EXCHANGE_HOUSE_BRANCH_USER_DEVICE_ID, dateTime, riaProperties));
 
-            logger.info("Request notifyRemittanceStatus...." + req);
+            logger.info("Request notifyRemittanceStatus....{}", req);
 
             ResponseEntity<OrderStatusResponse> responseEntity = restTemplate.exchange(riaProperties.getNotifyRemStatusUrl(), HttpMethod.POST, httpEntity, OrderStatusResponse.class);
             response = responseEntity.getBody();
-            logger.info("Notification Response notifyRemittanceStatus():\n" + response);
+            logger.info("Notification Response notifyRemittanceStatus(): {} \n", response);
 
             if (HttpStatus.OK.equals(responseEntity.getStatusCode())) {
                 if (Objects.nonNull(response)) {
@@ -662,13 +660,13 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
                         }
                     }
                 } else {
-                    logger.error("Response body contains empty response against: " + data.getReferenceNo());
+                    logger.error("Response body contains empty response against: {} ", data.getReferenceNo());
                 }
             } else {
-                logger.error("API Responded with different status code: " + responseEntity.getStatusCode());
+                logger.error("API Responded with different status code: {}", responseEntity.getStatusCode());
             }
         } catch (Exception ex) {
-            logger.error("Error occurred on calling notifyRemittanceStatus", ex);
+            logger.error("Error occurred on calling notifyRemittanceStatus {}", ex.getMessage());
         } finally {
             apiTraceService.saveApiTrace(apiTrace, riaProperties.getExchangeCode(), convertObjectToString(req), convertObjectToString(response), Constants.REQUEST_TYPE_NOTIFY_REM_STATUS, Constants.REQUEST_TYPE_NOTIFY_REM_STATUS, null);
             logger.info("API request data is -----------> \r\n" + convertObjectToString(req) + " \n and Response: \r\n" + convertObjectToString(response));
@@ -704,7 +702,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             }
             apiTrace.setStatus(Constants.REQUEST_TYPE_NOTIFY_REM_STATUS);
         } catch (Exception e) {
-            logger.error("Error occurred on buildApiTrace", e);
+            logger.error("Error occurred on buildApiTrace {}", e.getMessage());
         }
         return apiTrace;
     }
@@ -714,14 +712,13 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
             if (Objects.nonNull(response.getBody()) && Objects.nonNull(response.getBody().getResponse())) {
                 String responseData = convertObjectToString(response.getBody().getResponse());
                 if (Objects.nonNull(responseData)) {
-                    logger.info("getCancelRemittance(): responseData Saved" + responseData);
+                    logger.info("getCancelRemittance(): responseData Saved {}", responseData);
                     apiTraceService.saveRequestResponse(traceId, exchangeCode, null, responseData, status);
                 }
             }
         } catch (Exception e) {
-            logger.error("Error in response data transforming in getCancelRemittance(). Error = " + e);
+            logger.error("Error in response data transforming in getCancelRemittance(). {} ", e.getMessage());
         }
     }
-
 
 }
