@@ -6,7 +6,6 @@ import com.info.demo.service.ria.RiaExchangeHouseApiService;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,10 +21,13 @@ import java.util.concurrent.Executors;
 public class InitiateCashPickupCancelSchedular {
 	private static final Logger logger = LoggerFactory.getLogger(InitiateCashPickupCancelSchedular.class);
 
-	@Autowired
-	private ApiTraceService apiTraceService;
-	@Autowired
-	private RiaExchangeHouseApiService riaExchangeHouseApiService;
+	private final ApiTraceService apiTraceService;
+	private final RiaExchangeHouseApiService riaExchangeHouseApiService;
+
+	public InitiateCashPickupCancelSchedular(ApiTraceService apiTraceService, RiaExchangeHouseApiService riaExchangeHouseApiService) {
+		this.apiTraceService = apiTraceService;
+		this.riaExchangeHouseApiService = riaExchangeHouseApiService;
+	}
 
 	@Scheduled(fixedRate = 1000 * 60 * 5)
 	public void scheduleFixedRateTask() {

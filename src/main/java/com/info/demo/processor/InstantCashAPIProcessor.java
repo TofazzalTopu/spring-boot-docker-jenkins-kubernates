@@ -9,7 +9,6 @@ import com.info.demo.service.instantCash.ICPaymentReceiveService;
 import com.info.demo.service.instantCash.ICUnlockRemittanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,18 +22,12 @@ public class InstantCashAPIProcessor {
 
     public static final Logger logger = LoggerFactory.getLogger(InstantCashAPIProcessor.class);
 
-    @Autowired
-    private ICOutstandingRemittanceService icOutstandingRemittanceService;
+    private final RemittanceDataService remittanceDataService;
+    private final ICPaymentReceiveService icPaymentReceiveService;
 
-    @Autowired
-    private ICUnlockRemittanceService icUnlockRemittanceService;
-
-    @Autowired
-    private ICNotifyPaymentStatusRemittanceService icNotifyPaymentStatusRemittanceService;
-    @Autowired
-    private ICPaymentReceiveService icPaymentReceiveService;
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+    private final ICUnlockRemittanceService icUnlockRemittanceService;
+    private final ICOutstandingRemittanceService icOutstandingRemittanceService;
+    private final ICNotifyPaymentStatusRemittanceService icNotifyPaymentStatusRemittanceService;
 
     @Value("${INSTANT_CASH_API_USER_ID}")
     String icUserId;
@@ -44,12 +37,17 @@ public class InstantCashAPIProcessor {
     @Value("${INSTANT_CASH_API_USER_PASSWORD}")
     String icPassword;
 
+    public InstantCashAPIProcessor(RemittanceDataService remittanceDataService, ICPaymentReceiveService icPaymentReceiveService, ICUnlockRemittanceService icUnlockRemittanceService, ICOutstandingRemittanceService icOutstandingRemittanceService, ICNotifyPaymentStatusRemittanceService icNotifyPaymentStatusRemittanceService) {
+        this.remittanceDataService = remittanceDataService;
+        this.icPaymentReceiveService = icPaymentReceiveService;
+        this.icUnlockRemittanceService = icUnlockRemittanceService;
+        this.icOutstandingRemittanceService = icOutstandingRemittanceService;
+        this.icNotifyPaymentStatusRemittanceService = icNotifyPaymentStatusRemittanceService;
+    }
+
     public void process(ICExchangePropertyDTO icExchangePropertyDTO) {
-        logger.info("InstantCashAPIProcessor..........");
-        System.out.println("InstantCashAPIProcessor started.");
         if (Objects.nonNull(icExchangePropertyDTO)) {
             try {
-
                 icExchangePropertyDTO.setPassword(generateBase64Hash(icUserId, icPassword));
                 long time = System.currentTimeMillis();
                 List<RemittanceData> remittanceDataList = icOutstandingRemittanceService.fetchICOutstandingRemittance(icExchangePropertyDTO);

@@ -2,7 +2,6 @@ package com.info.demo.service.common;
 
 import com.info.demo.entity.ExchangeHouseProperty;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,11 +13,14 @@ import java.util.stream.Collectors;
 @Component
 public class LoadExchangeHouseProperty {
 
-    @Autowired
-    private ExchangeHousePropertyService exchangeHousePropertyService;
+    private final ExchangeHousePropertyService exchangeHousePropertyService;
 
     @Getter
     public static List<ExchangeHouseProperty> exchangeHousePropertyList = new ArrayList<>();
+
+    public LoadExchangeHouseProperty(ExchangeHousePropertyService exchangeHousePropertyService) {
+        this.exchangeHousePropertyService = exchangeHousePropertyService;
+    }
 
     @PostConstruct
     public void exchangeHouseProperty() {

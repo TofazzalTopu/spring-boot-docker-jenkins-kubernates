@@ -3,7 +3,6 @@ package com.info.demo.mapper;
 import com.info.demo.constants.RemittanceDataStatus;
 import com.info.demo.entity.ApiTrace;
 import com.info.demo.entity.ICCashRemittanceData;
-import com.info.demo.entity.RemittanceData;
 import com.info.demo.model.instantCash.ICOutstandingTransactionDTO;
 import com.info.demo.model.ria.SearchApiResponse;
 import com.info.demo.service.common.CommonService;
@@ -12,7 +11,6 @@ import com.info.demo.util.DateUtil;
 import com.info.demo.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +24,14 @@ public class ICPaymentReceiveRemittanceMapper {
 
     public static final Logger logger = LoggerFactory.getLogger(ICPaymentReceiveRemittanceMapper.class);
 
-    @Autowired
-    private CommonService commonService;
+    private final CommonService commonService;
 
     @Value("#{${bank.code}}")
     private String bankCode;
+
+    public ICPaymentReceiveRemittanceMapper(CommonService commonService) {
+        this.commonService = commonService;
+    }
 
 
     public ICCashRemittanceData prepareICCashRemittanceData(ICCashRemittanceData remittanceData, ICOutstandingTransactionDTO icOutstandingDTO, String exchangeCode, ApiTrace trace, boolean isCashTransaction) {

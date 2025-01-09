@@ -5,7 +5,6 @@ import com.info.demo.service.impl.ria.RiaExchangeApiProcessorService;
 import com.info.demo.util.ApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,8 +13,11 @@ public class RiaAPIProcessor {
 
     public static final Logger logger = LoggerFactory.getLogger(RiaAPIProcessor.class);
 
-    @Autowired
-    private RiaExchangeApiProcessorService riaExchangeApiProcessorService;
+    private final RiaExchangeApiProcessorService riaExchangeApiProcessorService;
+
+    public RiaAPIProcessor(RiaExchangeApiProcessorService riaExchangeApiProcessorService) {
+        this.riaExchangeApiProcessorService = riaExchangeApiProcessorService;
+    }
 
     public void process() {
         try {

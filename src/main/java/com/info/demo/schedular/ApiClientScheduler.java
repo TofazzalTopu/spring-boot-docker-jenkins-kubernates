@@ -6,12 +6,10 @@ import com.info.demo.service.common.ExchangeHousePropertyService;
 import com.info.demo.util.ApiUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,19 +19,19 @@ public class ApiClientScheduler {
 
     public static final Logger logger = LoggerFactory.getLogger(ApiClientScheduler.class);
 
-    @Autowired
-    private InstantCashAPIProcessor instantCashAPIProcessor;
+    private final RiaAPIProcessor riaAPIProcessor;
+    private final InstantCashAPIProcessor instantCashAPIProcessor;
+    private final ExchangeHousePropertyService exchangeHousePropertyService;
 
-    @Autowired
-    private RiaAPIProcessor riaAPIProcessor;
-
-    @Autowired
-    private ExchangeHousePropertyService exchangeHousePropertyService;
-
+    public ApiClientScheduler(RiaAPIProcessor riaAPIProcessor, InstantCashAPIProcessor instantCashAPIProcessor, ExchangeHousePropertyService exchangeHousePropertyService) {
+        this.riaAPIProcessor = riaAPIProcessor;
+        this.instantCashAPIProcessor = instantCashAPIProcessor;
+        this.exchangeHousePropertyService = exchangeHousePropertyService;
+    }
 
     @Scheduled(fixedDelay = 1000 * 60 * 5)
     public void apiClientScheduler() {
-        System.out.println("ICScheduler started.");
+        logger.info("ICScheduler started.");
         ExecutorService instantCashExecutor = Executors.newFixedThreadPool(1);
         ExecutorService riaExecutor = Executors.newFixedThreadPool(1);
 
@@ -50,12 +48,12 @@ public class ApiClientScheduler {
             });
 
         } catch (Exception ex) {
-            System.out.println(ex);
+            logger.error("Error in ApiClientScheduler: {}", ex.getMessage());
         }  finally {
             riaExecutor.shutdown();
             instantCashExecutor.shutdown();
         }
-        System.out.println("ICScheduler ended.");
+        logger.error("ICScheduler ended.");
     }
 
 //    @Bean
