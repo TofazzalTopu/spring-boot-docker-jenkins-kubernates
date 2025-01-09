@@ -40,7 +40,7 @@ public class ApiTraceServiceImpl implements ApiTraceService {
         try {
             return apiTraceRepository.save(apiTrace);
         } catch (Exception e) {
-            logger.error("Error in save() ApiTrace.Error = " + e);
+            logger.error("Error in save() ApiTrace.Error: {} ", e.getMessage());
         }
         return null;
     }
@@ -124,7 +124,7 @@ public class ApiTraceServiceImpl implements ApiTraceService {
             ApiTrace api = create(exchangeCode, requestType, businessDate);
             return api.getId();
         } catch (Exception e) {
-            logger.error("Error in initiateApiTrace.Error = " + e);
+            logger.error("Error in initiateApiTrace() ApiTrace.Error: {} ", e.getMessage());
         }
 
         return null;
@@ -145,7 +145,7 @@ public class ApiTraceServiceImpl implements ApiTraceService {
             api = apiTraceRepository.save(api);
             return api;
         } catch (Exception e) {
-            logger.error("Error in ApiTrace create().Error = " + e);
+            logger.error("Error in create() ApiTrace.Error: {} ", e.getMessage());
         }
 
         return null;
@@ -185,7 +185,7 @@ public class ApiTraceServiceImpl implements ApiTraceService {
             }
 
         } catch (Exception e) {
-            logger.error("Error in saveResponse.Error = " + e);
+            logger.error("Error in saveRequestResponse() ApiTrace.Error: {} ", e.getMessage());
         }
     }
 

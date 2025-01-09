@@ -49,7 +49,7 @@ public class CommonServiceImpl implements CommonService {
                 result = commonRepository.isUserExistByUserIdAndPassword(userId, password);
             }
         } catch (Exception e) {
-            logger.error("Error in isAuthorizedRequest: Error = " + e);
+            logger.error("Error in isAuthorizedRequest: {} ", e.getMessage());
         }
 
         return result;

@@ -16,15 +16,15 @@ public class LoadExchangeHouseProperty {
     private final ExchangeHousePropertyService exchangeHousePropertyService;
 
     @Getter
-    public static List<ExchangeHouseProperty> exchangeHousePropertyList = new ArrayList<>();
+    public static final List<ExchangeHouseProperty> exchangeHousePropertyList = new ArrayList<>();
 
     public LoadExchangeHouseProperty(ExchangeHousePropertyService exchangeHousePropertyService) {
         this.exchangeHousePropertyService = exchangeHousePropertyService;
     }
 
     @PostConstruct
-    public void exchangeHouseProperty() {
-        exchangeHousePropertyList = exchangeHousePropertyService.findAll();
+    protected void exchangeHouseProperty() {
+        exchangeHousePropertyList.addAll(exchangeHousePropertyService.findAll());
         System.out.println("ExchangeHousePropertyList size: " + exchangeHousePropertyList.size());
     }
 
