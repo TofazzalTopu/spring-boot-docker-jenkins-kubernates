@@ -6,7 +6,6 @@ import com.info.demo.service.common.ExchangeHousePropertyService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,11 @@ public class ExchangeHousePropertyServiceImpl implements ExchangeHousePropertySe
 
     private static final Logger logger = LoggerFactory.getLogger(ExchangeHousePropertyServiceImpl.class);
 
-    @Autowired
-    private ExchangeHousePropertyRepository exchangeHousePropertyRepository;
+    private final ExchangeHousePropertyRepository exchangeHousePropertyRepository;
+
+    public ExchangeHousePropertyServiceImpl(ExchangeHousePropertyRepository exchangeHousePropertyRepository) {
+        this.exchangeHousePropertyRepository = exchangeHousePropertyRepository;
+    }
 
 
     @Override

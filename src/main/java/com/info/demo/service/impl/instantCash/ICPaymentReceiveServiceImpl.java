@@ -17,7 +17,6 @@ import com.info.demo.util.Constants;
 import com.info.demo.util.ObjectConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -42,23 +41,25 @@ public class ICPaymentReceiveServiceImpl implements ICPaymentReceiveService {
     @Value("${IC_API_FINANCIAL_ID:BD01RH}")
     public String IC_API_FINANCIAL_ID;
 
-    @Autowired
-    private CommonService commonService;
+    private final RestTemplate restTemplate;
+    private final CommonService commonService;
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final ICPaymentReceiveRemittanceMapper mapper;
+    private final ICCashRemittanceDataService icCashRemittanceDataService;
 
-    @Autowired
-    private ICCashRemittanceDataService icCashRemittanceDataService;
-
-    @Autowired
-    private ICPaymentReceiveRemittanceMapper mapper;
 
     @Value("#{${bank.code}}")
     private String bankCode;
+
+    public ICPaymentReceiveServiceImpl(RestTemplate restTemplate, CommonService commonService, ApiTraceService apiTraceService, ICPaymentReceiveRemittanceMapper mapper, ICCashRemittanceDataService icCashRemittanceDataService) {
+        this.restTemplate = restTemplate;
+        this.commonService = commonService;
+        this.apiTraceService = apiTraceService;
+        this.mapper = mapper;
+        this.icCashRemittanceDataService = icCashRemittanceDataService;
+    }
 
 
     //    @Override

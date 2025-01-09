@@ -14,7 +14,6 @@ import com.info.demo.util.ApiUtil;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -41,17 +40,19 @@ public class ICOutstandingRemittanceServiceImpl implements ICOutstandingRemittan
 
     public static final Logger logger = LoggerFactory.getLogger(ICOutstandingRemittanceServiceImpl.class);
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final RestTemplate restTemplate;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final ICOutstandingRemittanceMapper mapper;
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+    public ICOutstandingRemittanceServiceImpl(RestTemplate restTemplate, ApiTraceService apiTraceService, ICOutstandingRemittanceMapper mapper, RemittanceDataService remittanceDataService) {
+        this.restTemplate = restTemplate;
+        this.apiTraceService = apiTraceService;
+        this.mapper = mapper;
+        this.remittanceDataService = remittanceDataService;
+    }
 
-    @Autowired
-    private ICOutstandingRemittanceMapper mapper;
 
     @Override
     @Deprecated

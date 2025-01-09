@@ -5,8 +5,7 @@ import com.info.demo.entity.ApiTrace;
 import com.info.demo.entity.Branch;
 import com.info.demo.entity.MbkBrn;
 import com.info.demo.entity.RemittanceData;
-import com.info.demo.model.ria.DownloadableOrderDTO;
-import com.info.demo.model.ria.DownloadableResponse;
+import com.info.demo.model.ria.*;
 import com.info.demo.repository.CommonRepository;
 import com.info.demo.service.common.BranchService;
 import com.info.demo.service.common.MbkBrnService;
@@ -14,7 +13,6 @@ import com.info.demo.service.common.RemittanceDataService;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +20,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -34,17 +33,20 @@ public class RiaRemittanceMapper {
     @Value("#{${bank.code}}")
     private String bankCode;
 
-    @Autowired
-    private CommonRepository commonRepository;
+    private final BranchService branchService;
 
-    @Autowired
-    private BranchService branchService;
+    private final MbkBrnService mbkBrnService;
+    private final CommonRepository commonRepository;
 
-    @Autowired
-    private MbkBrnService mbkBrnService;
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+
+    public RiaRemittanceMapper(BranchService branchService, MbkBrnService mbkBrnService, CommonRepository commonRepository, RemittanceDataService remittanceDataService) {
+        this.branchService = branchService;
+        this.mbkBrnService = mbkBrnService;
+        this.commonRepository = commonRepository;
+        this.remittanceDataService = remittanceDataService;
+    }
 
     public List<RemittanceData> preparingRemittanceDataFromResponse(ApiTrace trace, String exchangeCode, DownloadableResponse downloadableResponse, String bankCode) {
         logger.info("Enter into preparingRemittanceDataFromResponse, traceId = " + trace.getId());
@@ -67,35 +69,30 @@ public class RiaRemittanceMapper {
 
                 if (Objects.nonNull(r.getBeneficiary())) {
 
-                    if (Objects.nonNull(r.getBeneficiary().getResidence())) {
-                        rem.setCityDistrict(r.getBeneficiary().getResidence().getBeneCity());
+                    Beneficiary beneficiary = r.getBeneficiary();
+
+                    if (Objects.nonNull(beneficiary.getResidence())) {
+                        rem.setCityDistrict(beneficiary.getResidence().getBeneCity());
                     }
 
-                    if (Objects.nonNull(r.getBeneficiary().getBankAccount())) {
-                        rem.setCreditorAccountNo(r.getBeneficiary().getBankAccount().getBankAccountNo());
+                    if (Objects.nonNull(beneficiary.getBankAccount())) {
+                        rem.setCreditorAccountNo(beneficiary.getBankAccount().getBankAccountNo());
                     }
 
                     String recieverName = "";
-                    if (Objects.nonNull(r.getBeneficiary().getBenePersonalInfo())) {
-
-                        if (Objects.nonNull(r.getBeneficiary().getBenePersonalInfo().getBeneFirstName()))
-                            recieverName = r.getBeneficiary().getBenePersonalInfo().getBeneFirstName() + " ";
-
-                        if (Objects.nonNull(r.getBeneficiary().getBenePersonalInfo().getBeneMiddleName()))
-                            recieverName += r.getBeneficiary().getBenePersonalInfo().getBeneMiddleName() + " ";
-
-                        if (Objects.nonNull(r.getBeneficiary().getBenePersonalInfo().getBeneLastName()))
-                            recieverName += r.getBeneficiary().getBenePersonalInfo().getBeneLastName() + " ";
+                    if (Objects.nonNull(beneficiary.getBenePersonalInfo())) {
+                        BenePersonalInformation benePersonalInfo = beneficiary.getBenePersonalInfo();
+                        recieverName = buildFullName(benePersonalInfo.getBeneFirstName(), benePersonalInfo.getBeneMiddleName(), benePersonalInfo.getBeneLastName());
 
                     }
                     rem.setCreditorName(recieverName);
 
-                    if (Objects.nonNull(r.getBeneficiary().getBeneContactDetails())) {
-                        rem.setPhoneNo(r.getBeneficiary().getBeneContactDetails().getBenePhoneNo());
+                    if (Objects.nonNull(beneficiary.getBeneContactDetails())) {
+                        rem.setPhoneNo(beneficiary.getBeneContactDetails().getBenePhoneNo());
                     }
 
-                    if (Objects.nonNull(r.getBeneficiary().getResidence())) {
-                        rem.setReceiverAddress(r.getBeneficiary().getResidence().getBeneAddress());
+                    if (Objects.nonNull(beneficiary.getResidence())) {
+                        rem.setReceiverAddress(beneficiary.getResidence().getBeneAddress());
                     }
                 }
 
@@ -103,40 +100,34 @@ public class RiaRemittanceMapper {
                 rem.setExchangeName(Constants.RIA_EXCHANGE_HOUSE);
 
                 if (Objects.nonNull(r.getTransaction())) {
-                    rem.setExchangeTransactionDate(r.getTransaction().getOrderDate());
-                    rem.setExchangeTransactionNo(r.getTransaction().getOrderNo());
-                    rem.setCountryOriginate(r.getTransaction().getCountryFrom());
-                    rem.setPurpose(r.getTransaction().getTransferReason());
-                    rem.setReferenceDate(dt.parse(r.getTransaction().getOrderDate()));
-                    rem.setReferenceNo(r.getTransaction().getOrderNo());
-                    rem.setSecurityCode(r.getTransaction().getPin());
+                    Transaction transaction = r.getTransaction();
+                    rem.setExchangeTransactionDate(transaction.getOrderDate());
+                    rem.setExchangeTransactionNo(transaction.getOrderNo());
+                    rem.setCountryOriginate(transaction.getCountryFrom());
+                    rem.setPurpose(transaction.getTransferReason());
+                    rem.setReferenceDate(dt.parse(transaction.getOrderDate()));
+                    rem.setReferenceNo(transaction.getOrderNo());
+                    rem.setSecurityCode(transaction.getPin());
                 }
 
                 if (Objects.nonNull(r.getCustomer())) {
-                    if (Objects.nonNull(r.getCustomer().getContactDetails())) {
-                        rem.setSenderPhone(r.getCustomer().getContactDetails().getCustPhoneNo());
+                    Customer customer = r.getCustomer();
+                    if (Objects.nonNull(customer.getContactDetails())) {
+                        rem.setSenderPhone(customer.getContactDetails().getCustPhoneNo());
                     }
-                    if (Objects.nonNull(r.getCustomer().getIdentityDocument())) {
-                        rem.setIdNo(r.getCustomer().getIdentityDocument().getCustID1No());
-                        rem.setSenderIdType(r.getCustomer().getIdentityDocument().getCustID1Type());
+                    if (Objects.nonNull(customer.getIdentityDocument())) {
+                        rem.setIdNo(customer.getIdentityDocument().getCustID1No());
+                        rem.setSenderIdType(customer.getIdentityDocument().getCustID1Type());
                     }
 
                     String senderName = "";
-                    if (Objects.nonNull(r.getCustomer().getPersonalInfo())) {
-                        senderName = r.getCustomer().getPersonalInfo().getCustFirstName() + " ";
-
-                        if (Objects.nonNull(r.getCustomer().getPersonalInfo().getCustMiddleName())) {
-                            senderName += r.getCustomer().getPersonalInfo().getCustMiddleName() + " ";
-                        }
-
-                        if (Objects.nonNull(r.getCustomer().getPersonalInfo().getCustLastName())) {
-                            senderName += r.getCustomer().getPersonalInfo().getCustLastName();
-                        }
+                    if (Objects.nonNull(customer.getPersonalInfo())) {
+                        senderName = buildFullName(customer.getPersonalInfo().getCustFirstName(), customer.getPersonalInfo().getCustMiddleName(), customer.getPersonalInfo().getCustLastName());
                     }
                     rem.setSenderName(senderName);
 
-                    if (Objects.nonNull(r.getCustomer().getPersonalInfo())) {
-                        rem.setSenderOccupation(r.getCustomer().getPersonalInfo().getCustOccupation());
+                    if (Objects.nonNull(customer.getPersonalInfo())) {
+                        rem.setSenderOccupation(customer.getPersonalInfo().getCustOccupation());
                     }
                 }
 
@@ -249,11 +240,21 @@ public class RiaRemittanceMapper {
 
 
     public boolean isValidRouting(List<Branch> branchList, List<MbkBrn> mbkBrnList, String bankCode, String routingNumber, String messageType) {
-        if (messageType.equals(RemittanceDataStatus.EFT) && isBranchRoutingExist(branchList, routingNumber)) return true;
+        if (messageType.equals(RemittanceDataStatus.EFT) && isBranchRoutingExist(branchList, routingNumber))
+            return true;
         if (messageType.equals(RemittanceDataStatus.BEFTN) && isMbkBrnBranchRoutingExist(mbkBrnList, bankCode, routingNumber))
             return true;
         return false;
     }
 
+    private String buildFullName(String... names) {
+        return Arrays.stream(names)
+                .filter(Objects::nonNull)
+                .filter(name -> !name.isEmpty())
+                .collect(Collectors.joining(" "));
+    }
 
+    private String getNonNullValue(String phoneNumber, String mobileNumber) {
+        return Objects.nonNull(phoneNumber) ? phoneNumber : mobileNumber;
+    }
 }

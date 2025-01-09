@@ -175,7 +175,6 @@ public class DateUtil {
 				 return converToSqltDate(sdf.parse(dateString));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 				return null;
 			}
 		}

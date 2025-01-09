@@ -19,7 +19,6 @@ import com.info.demo.util.ApiUtil;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -41,19 +40,13 @@ public class ICNotifyPaymentStatusRemittanceServiceImpl implements ICNotifyPayme
 
     public static final Logger logger = LoggerFactory.getLogger(ICNotifyPaymentStatusRemittanceServiceImpl.class);
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final RestTemplate restTemplate;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+    private final ICCashRemittanceDataService icCashRemittanceDataService;
 
-    @Autowired
-    private ICCashRemittanceDataService icCashRemittanceDataService;
-
-    @Autowired
     private RemittanceProcessService remittanceProcessService;
 
     public static final String NEW_STATUS_D = "D";
@@ -64,6 +57,14 @@ public class ICNotifyPaymentStatusRemittanceServiceImpl implements ICNotifyPayme
 
     @Value("${INSTANT_CASH_API_USER_ID}")
     private String INSTANT_CASH_API_USER_ID;
+
+    public ICNotifyPaymentStatusRemittanceServiceImpl(RestTemplate restTemplate, ApiTraceService apiTraceService, RemittanceDataService remittanceDataService, ICCashRemittanceDataService icCashRemittanceDataService, RemittanceProcessService remittanceProcessService) {
+        this.restTemplate = restTemplate;
+        this.apiTraceService = apiTraceService;
+        this.remittanceDataService = remittanceDataService;
+        this.icCashRemittanceDataService = icCashRemittanceDataService;
+        this.remittanceProcessService = remittanceProcessService;
+    }
 
 
     @Override

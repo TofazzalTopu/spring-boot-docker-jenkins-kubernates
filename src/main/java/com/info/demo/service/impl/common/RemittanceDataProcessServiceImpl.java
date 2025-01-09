@@ -9,8 +9,6 @@ import com.info.demo.repository.StopRemittanceDataRepository;
 import com.info.demo.service.common.ApiTraceService;
 import com.info.demo.service.common.RemittanceDataService;
 import com.info.demo.service.common.RemittanceProcessMasterService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,24 +19,25 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class RemittanceDataProcessServiceImpl {
 
-    @Autowired
-    private CommonRepository commonRepository;
+    private final ApiTraceService apiTraceService;
+    private final CommonRepository commonRepository;
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    //    @Lazy
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private RemittanceProcessMasterService remittanceProcessMasterService;
+    private final StopRemittanceDataRepository stopRemittanceDataRepository;
+    private final RemittanceProcessMasterService remittanceProcessMasterService;
 
-    @Autowired
-    @Lazy
-    private RemittanceDataService remittanceDataService;
+    public RemittanceDataProcessServiceImpl(ApiTraceService apiTraceService, CommonRepository commonRepository, RemittanceDataService remittanceDataService, StopRemittanceDataRepository stopRemittanceDataRepository, RemittanceProcessMasterService remittanceProcessMasterService) {
+        this.apiTraceService = apiTraceService;
+        this.commonRepository = commonRepository;
+        this.remittanceDataService = remittanceDataService;
+        this.stopRemittanceDataRepository = stopRemittanceDataRepository;
+        this.remittanceProcessMasterService = remittanceProcessMasterService;
+    }
 
-    @Autowired
-    private StopRemittanceDataRepository stopRemittanceDataRepository;
 
-
-//    @Transactional
+    //    @Transactional
     public List<RemittanceData> processDownloadData(List<RemittanceData> remittanceDataList, String exchangeCode, String exchangeName) {
         List<RemittanceData> remittanceDataArrayList = new ArrayList<>();
         if (!remittanceDataList.isEmpty()) {

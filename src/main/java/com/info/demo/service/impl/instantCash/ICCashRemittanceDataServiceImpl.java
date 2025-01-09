@@ -3,16 +3,20 @@ package com.info.demo.service.impl.instantCash;
 import com.info.demo.entity.ICCashRemittanceData;
 import com.info.demo.repository.ICCashRemittanceDataRepository;
 import com.info.demo.service.instantCash.ICCashRemittanceDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ICCashRemittanceDataServiceImpl implements ICCashRemittanceDataService {
 
-    @Autowired
-    private ICCashRemittanceDataRepository icCashRemittanceDataRepository;
+    private final ICCashRemittanceDataRepository icCashRemittanceDataRepository;
+
+    public ICCashRemittanceDataServiceImpl(ICCashRemittanceDataRepository icCashRemittanceDataRepository) {
+        this.icCashRemittanceDataRepository = icCashRemittanceDataRepository;
+    }
 
     @Override
     public ICCashRemittanceData save(ICCashRemittanceData remittanceData) {

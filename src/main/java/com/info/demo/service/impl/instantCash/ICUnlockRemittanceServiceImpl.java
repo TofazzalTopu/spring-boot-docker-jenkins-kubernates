@@ -14,7 +14,6 @@ import com.info.demo.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -37,17 +36,19 @@ public class ICUnlockRemittanceServiceImpl implements ICUnlockRemittanceService 
 
     public static String API_FINANCIAL_ID = "AE01BH";
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final RestTemplate restTemplate;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+    private final RemittanceDataProcessServiceImpl remittanceDataProcessService;
 
-    @Autowired
-    private RemittanceDataProcessServiceImpl remittanceDataProcessService;
+    public ICUnlockRemittanceServiceImpl(RestTemplate restTemplate, ApiTraceService apiTraceService, RemittanceDataService remittanceDataService, RemittanceDataProcessServiceImpl remittanceDataProcessService) {
+        this.restTemplate = restTemplate;
+        this.apiTraceService = apiTraceService;
+        this.remittanceDataService = remittanceDataService;
+        this.remittanceDataProcessService = remittanceDataProcessService;
+    }
 
     @Override
     @Deprecated

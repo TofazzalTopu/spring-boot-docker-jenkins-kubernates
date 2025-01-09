@@ -15,9 +15,9 @@ import com.info.demo.service.ria.RiaExchangeHouseApiService;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,32 +25,35 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class RiaCashPaymentServiceImpl implements RiaCashPaymentService {
 
     private static final Logger logger = LoggerFactory.getLogger(RiaCashPaymentServiceImpl.class);
 
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final ObjectMapper mapper;
 
-    @Autowired
-    private RemittanceProcessService remittanceProcessService;
+    private final ApiTraceService apiTraceService;
+    private final BranchRepository branchRepository;
 
-    @Autowired
-    private RiaExchangeHouseApiService riaExchangeHouseApiService;
+    private final RemittanceProcessService remittanceProcessService;
 
+    private final RiaExchangeHouseApiService riaExchangeHouseApiService;
 
-    @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private BranchRepository branchRepository;
 
     @Value("#{${bank.code}}")
     private String bankCode;
 
     @Value("${bank.name}")
     private String bankName;
+
+    public RiaCashPaymentServiceImpl(ObjectMapper mapper, ApiTraceService apiTraceService, BranchRepository branchRepository, RemittanceProcessService remittanceProcessService, RiaExchangeHouseApiService riaExchangeHouseApiService) {
+        this.mapper = mapper;
+        this.apiTraceService = apiTraceService;
+        this.branchRepository = branchRepository;
+        this.remittanceProcessService = remittanceProcessService;
+        this.riaExchangeHouseApiService = riaExchangeHouseApiService;
+    }
 
     @Override
     public SearchApiResponse searchRemittance(SearchApiRequest searchApiRequest) {

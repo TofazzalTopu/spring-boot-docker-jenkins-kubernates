@@ -11,7 +11,6 @@ import com.info.demo.service.common.RemittanceProcessService;
 import com.info.demo.service.ria.StopRemittanceDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +24,23 @@ public class RemittanceProcessServiceImpl implements RemittanceProcessService {
 
     private static final Logger logger = LoggerFactory.getLogger(RemittanceProcessServiceImpl.class);
 
-    @Autowired
-    private RemittanceProcessMasterService remittanceProcessMasterService;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private StopRemittanceDataService stopRemittanceDataService;
+    private final StopRemittanceDataService stopRemittanceDataService;
+    private final RemittanceProcessMasterService remittanceProcessMasterService;
 
-    @Autowired
-    private ApiTraceService apiTraceService;
 
     @Value("${RIA_EXCHANGE_HOUSE_BRANCH_USER:CBSRMS}")
     private String RIA_EXCHANGE_HOUSE_BRANCH_USER;
+
+    public RemittanceProcessServiceImpl(ApiTraceService apiTraceService, RemittanceDataService remittanceDataService, StopRemittanceDataService stopRemittanceDataService, RemittanceProcessMasterService remittanceProcessMasterService) {
+        this.apiTraceService = apiTraceService;
+        this.remittanceDataService = remittanceDataService;
+        this.stopRemittanceDataService = stopRemittanceDataService;
+        this.remittanceProcessMasterService = remittanceProcessMasterService;
+    }
 
     @Override
     public List<RemittanceData> saveAllRemittanceData(List<RemittanceData> remittanceDataList) {

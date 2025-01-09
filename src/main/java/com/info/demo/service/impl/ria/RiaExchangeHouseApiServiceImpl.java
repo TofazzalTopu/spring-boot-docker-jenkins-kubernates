@@ -17,10 +17,10 @@ import com.info.demo.util.DateUtil;
 import com.info.demo.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
@@ -30,24 +30,19 @@ import java.util.*;
 import static com.info.demo.util.ObjectConverter.convertObjectToString;
 
 @Service
+@Transactional
 public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiService {
 
     private static final Logger logger = LoggerFactory.getLogger(RiaExchangeHouseApiServiceImpl.class);
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final ObjectMapper mapper;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private CommonService commonService;
+    private final CommonService commonService;
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private ObjectMapper mapper;
-
-    @Autowired
-    private RiaRemittanceMapper riaRemittanceMapper;
+    private final RiaRemittanceMapper riaRemittanceMapper;
 
     @Value("#{${bank.code}}")
     private String bankCode;
@@ -57,6 +52,14 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
 
     @Value("${RIA_EXCHANGE_HOUSE_BRANCH_USER:CBSRMS}")
     private String RIA_EXCHANGE_HOUSE_BRANCH_USER;
+
+    public RiaExchangeHouseApiServiceImpl(ObjectMapper mapper, RestTemplate restTemplate, CommonService commonService, ApiTraceService apiTraceService, RiaRemittanceMapper riaRemittanceMapper) {
+        this.mapper = mapper;
+        this.restTemplate = restTemplate;
+        this.commonService = commonService;
+        this.apiTraceService = apiTraceService;
+        this.riaRemittanceMapper = riaRemittanceMapper;
+    }
 
     @Override
     public SearchApiResponse searchRemittance(Long apiTraceId, SearchApiRequest searchApiRequest) {

@@ -5,18 +5,22 @@ import com.info.demo.repository.RemittanceProcessMasterRepository;
 import com.info.demo.service.common.RemittanceProcessMasterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 @Service
+@Transactional
 public class RemittanceProcessMasterServiceImpl implements RemittanceProcessMasterService {
 
     private static final Logger logger = LoggerFactory.getLogger(RemittanceProcessMasterServiceImpl.class);
 
-    @Autowired
-    private RemittanceProcessMasterRepository remittanceProcessMasterRepository;
+    private final RemittanceProcessMasterRepository remittanceProcessMasterRepository;
+
+    public RemittanceProcessMasterServiceImpl(RemittanceProcessMasterRepository remittanceProcessMasterRepository) {
+        this.remittanceProcessMasterRepository = remittanceProcessMasterRepository;
+    }
 
     @Override
     public RemittanceProcessMaster save(RemittanceProcessMaster master) {

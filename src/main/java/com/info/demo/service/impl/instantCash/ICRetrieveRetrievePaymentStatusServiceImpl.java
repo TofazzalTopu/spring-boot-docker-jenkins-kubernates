@@ -12,7 +12,6 @@ import com.info.demo.util.ApiUtil;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -31,14 +30,16 @@ public class ICRetrieveRetrievePaymentStatusServiceImpl implements ICRetrievePay
 
     public static String API_FINANCIAL_ID = "AE01BH";
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final RestTemplate restTemplate;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RemittanceDataService remittanceDataService;
 
-    @Autowired
-    private RemittanceDataService remittanceDataService;
+    public ICRetrieveRetrievePaymentStatusServiceImpl(RestTemplate restTemplate, ApiTraceService apiTraceService, RemittanceDataService remittanceDataService) {
+        this.restTemplate = restTemplate;
+        this.apiTraceService = apiTraceService;
+        this.remittanceDataService = remittanceDataService;
+    }
 
     @Override
     @Deprecated

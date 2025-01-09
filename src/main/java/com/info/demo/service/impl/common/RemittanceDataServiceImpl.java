@@ -5,7 +5,6 @@ import com.info.demo.repository.RemittanceDataRepository;
 import com.info.demo.service.common.RemittanceDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -19,13 +18,16 @@ public class RemittanceDataServiceImpl implements RemittanceDataService {
 
     private static final Logger logger = LoggerFactory.getLogger(RemittanceDataServiceImpl.class);
 
-    @Autowired
-    private RemittanceDataRepository remittanceDataRepository;
-    @Autowired
-    private RemittanceDataProcessServiceImpl remittanceDataProcessService;
+    private final RemittanceDataRepository remittanceDataRepository;
+    private final RemittanceDataProcessServiceImpl remittanceDataProcessService;
 
     @Value("${INSTANT_CASH_API_USER_ID}")
     private String INSTANT_CASH_API_USER_ID;
+
+    public RemittanceDataServiceImpl(RemittanceDataRepository remittanceDataRepository, RemittanceDataProcessServiceImpl remittanceDataProcessService) {
+        this.remittanceDataRepository = remittanceDataRepository;
+        this.remittanceDataProcessService = remittanceDataProcessService;
+    }
 
     @Override
     public RemittanceData save(RemittanceData remittanceData) {

@@ -10,8 +10,8 @@ import com.info.demo.util.Constants;
 import com.info.demo.util.ParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
@@ -20,15 +20,19 @@ import static com.info.demo.util.ObjectConverter.convertObjectToString;
 import static com.info.demo.util.ParseUtil.*;
 
 @Service
+@Transactional
 public class ApiService {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
 
-    @Autowired
-    private CommonService commonService;
+    private final CommonService commonService;
 
-    @Autowired
-    private RiaCashPaymentService riaCashPaymentService;
+    private final RiaCashPaymentService riaCashPaymentService;
+
+    public ApiService(CommonService commonService, RiaCashPaymentService riaCashPaymentService) {
+        this.commonService = commonService;
+        this.riaCashPaymentService = riaCashPaymentService;
+    }
 
     public String searchRemittance(String userId, String password, SearchApiRequest apiRequest, HttpServletRequest request) {
         logger.info("Enter into ApiService: searchRemittance()");

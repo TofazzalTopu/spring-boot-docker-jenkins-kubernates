@@ -10,8 +10,8 @@ import com.info.demo.service.ria.RiaExchangeHouseApiService;
 import com.info.demo.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -19,17 +19,20 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RiaExchangeApiProcessorService {
     private static final Logger logger = LoggerFactory.getLogger(RiaExchangeApiProcessorService.class);
 
-    @Autowired
-    private RiaExchangeHouseApiService riaExchangeHouseApiService;
+    private final ApiTraceService apiTraceService;
 
-    @Autowired
-    private ApiTraceService apiTraceService;
+    private final RemittanceProcessService remittanceProcessService;
+    private final RiaExchangeHouseApiService riaExchangeHouseApiService;
 
-    @Autowired
-    private RemittanceProcessService remittanceProcessService;
+    public RiaExchangeApiProcessorService(ApiTraceService apiTraceService, RemittanceProcessService remittanceProcessService, RiaExchangeHouseApiService riaExchangeHouseApiService) {
+        this.apiTraceService = apiTraceService;
+        this.remittanceProcessService = remittanceProcessService;
+        this.riaExchangeHouseApiService = riaExchangeHouseApiService;
+    }
 
 
     public void downloadRemittanceAndNotify(RiaExchangePropertyDTO riaExchangeProperties) {
