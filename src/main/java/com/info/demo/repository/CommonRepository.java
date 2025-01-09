@@ -39,7 +39,7 @@ public class CommonRepository {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+           logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
         }
 
         return map;
@@ -63,7 +63,7 @@ public class CommonRepository {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
         }
 
         return map;
@@ -82,7 +82,7 @@ public class CommonRepository {
                 return (String) resultList.get(0);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
         }
 
         return "";
@@ -170,7 +170,7 @@ public class CommonRepository {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
         }
 
         return local;
