@@ -9,7 +9,6 @@ import com.info.demo.util.Constants;
 import com.info.demo.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +24,15 @@ public class ICOutstandingRemittanceMapper {
 
     public static final Logger logger = LoggerFactory.getLogger(ICOutstandingRemittanceMapper.class);
 
-    @Autowired
-    private CommonService commonService;
+    private final CommonService commonService;
 
     @Value("#{${bank.code}}")
     private String bankCode;
+
+
+    public ICOutstandingRemittanceMapper(CommonService commonService) {
+        this.commonService = commonService;
+    }
 
 
     public RemittanceData prepareRemittanceData(ICOutstandingTransactionDTO icOutstandingDTO, String exchangeCode, ApiTrace trace) {
