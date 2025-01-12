@@ -73,6 +73,7 @@ public class RiaRemittanceMapper {
 
                     if (Objects.nonNull(beneficiary.getResidence())) {
                         rem.setCityDistrict(beneficiary.getResidence().getBeneCity());
+                        rem.setReceiverAddress(beneficiary.getResidence().getBeneAddress());
                     }
 
                     if (Objects.nonNull(beneficiary.getBankAccount())) {
@@ -89,10 +90,6 @@ public class RiaRemittanceMapper {
 
                     if (Objects.nonNull(beneficiary.getBeneContactDetails())) {
                         rem.setPhoneNo(beneficiary.getBeneContactDetails().getBenePhoneNo());
-                    }
-
-                    if (Objects.nonNull(beneficiary.getResidence())) {
-                        rem.setReceiverAddress(beneficiary.getResidence().getBeneAddress());
                     }
                 }
 
