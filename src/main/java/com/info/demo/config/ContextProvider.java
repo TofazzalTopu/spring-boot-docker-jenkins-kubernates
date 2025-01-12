@@ -8,25 +8,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContextProvider implements ApplicationContextAware {
  
-    private ApplicationContext CONTEXT;
+    private ApplicationContext applicationContext;
  
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        CONTEXT = applicationContext;
+        this.applicationContext = applicationContext;
     }
  
     /**
      * Get a Spring bean by type.
      **/
     public <T> T getBean(Class<T> beanClass) {
-        return CONTEXT.getBean(beanClass);
+        return applicationContext.getBean(beanClass);
     }
  
     /**
      * Get a Spring bean by name.
      **/
     public Object getBean(String beanName) {
-        return CONTEXT.getBean(beanName);
+        return applicationContext.getBean(beanName);
     }
  
 }
