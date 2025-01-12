@@ -68,11 +68,10 @@ public class ICOutstandingRemittanceServiceImpl implements ICOutstandingRemittan
         try {
             if (Objects.isNull(trace)) return new ArrayList<>();
             HttpEntity<String> httpEntity = ApiUtil.createHttpEntity("", uuid, icDTO);
-            icDTO.setOutstandingUrl("http://localhost:8070/api/OK/fetchICOutstandingRemittance");
             int pageNumber = 1;
             while (pageNumber < 2000) {
                 String outstandingUrl = icDTO.getOutstandingUrl() + "?pageNumber=" + pageNumber + "&pageSize=1000";
-                ResponseEntity<ICOutstandingRemittanceDTO> responseEntity = restTemplate.exchange(icDTO.getOutstandingUrl(), HttpMethod.GET, httpEntity, ICOutstandingRemittanceDTO.class);
+                ResponseEntity<ICOutstandingRemittanceDTO> responseEntity = restTemplate.exchange(outstandingUrl, HttpMethod.GET, httpEntity, ICOutstandingRemittanceDTO.class);
 
                 if (HttpStatus.OK.equals(responseEntity.getStatusCode()) && Objects.nonNull(responseEntity.getBody()) && !responseEntity.getBody().getData().isEmpty()) {
                     transactionDTOArrayList.addAll(responseEntity.getBody().getData());

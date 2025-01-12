@@ -132,7 +132,6 @@ public class ICPaymentReceiveServiceImpl implements ICPaymentReceiveService {
         Optional.ofNullable(apiTrace).orElseThrow(() -> new RuntimeException("Unable to create ApiTrace!"));
 
         try {
-            dto.setPaymentReceiveUrl("http://localhost:8070/api/OK/paymentReceive");
             String paymentUrl = dto.getPaymentReceiveUrl().trim() + "?reference=" + referenceNo.trim();
             System.out.println("paymentUrl: " + paymentUrl);
             ResponseEntity<ICOutstandingTransactionDTO> responseEntity = restTemplate.exchange(paymentUrl, HttpMethod.GET, ApiUtil.createHttpEntity("", uuid, dto), ICOutstandingTransactionDTO.class);
