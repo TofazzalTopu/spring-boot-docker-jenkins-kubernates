@@ -134,7 +134,8 @@ public class ICPaymentReceiveServiceImpl implements ICPaymentReceiveService {
         try {
             String paymentUrl = dto.getPaymentReceiveUrl().trim() + "?reference=" + referenceNo.trim();
             System.out.println("paymentUrl: " + paymentUrl);
-            ResponseEntity<ICOutstandingTransactionDTO> responseEntity = restTemplate.exchange(paymentUrl, HttpMethod.GET, ApiUtil.createHttpEntity("", uuid, dto), ICOutstandingTransactionDTO.class);
+            HttpEntity<String> httpEntity = ApiUtil.createHttpEntity("", uuid, dto);
+            ResponseEntity<ICOutstandingTransactionDTO> responseEntity = restTemplate.exchange(paymentUrl, HttpMethod.GET, httpEntity, ICOutstandingTransactionDTO.class);
             searchApiResponse.setOriginalResponse(String.valueOf(responseEntity.getBody()));
 
             if ((responseEntity.getStatusCode().equals(HttpStatus.OK)) && Objects.nonNull(responseEntity.getBody())) {
