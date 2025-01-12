@@ -19,6 +19,7 @@ import java.util.*;
 @Transactional
 public class CommonRepository {
     private static final Logger logger = LoggerFactory.getLogger(CommonRepository.class);
+    private static final String JAVAX_PERSISTENCE_CACHE_RETRIEVE_MODE = "javax.persistence.cache.retrieveMode";
     @PersistenceContext
     private EntityManager em;
 
@@ -101,7 +102,7 @@ public class CommonRepository {
             query.setParameter("exchange_code", exchangeCode);
             query.setParameter("api_data", api_data);
             query.setParameter("status", status);
-            query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+            query.setHint(JAVAX_PERSISTENCE_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
             List<RemittanceProcessMaster> resultList = query.getResultList();
             if (!resultList.isEmpty()) {
                 master = resultList.get(0);
@@ -119,7 +120,7 @@ public class CommonRepository {
             TypedQuery<RemittanceData> query = em.createQuery("SELECT r FROM RemittanceData r  where r.referenceNo = :reference_no and r.exchangeCode= :exchange_code ", RemittanceData.class);
             query.setParameter("reference_no", referenceNo);
             query.setParameter("exchange_code", exchangeCode);
-            query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+            query.setHint(JAVAX_PERSISTENCE_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
             return query.getResultList();
         } catch (Exception ex) {
             logger.error("Error in getRemittancebyReference()", ex);
@@ -131,7 +132,7 @@ public class CommonRepository {
     public List<StopRemittanceData> getCancelRequestUnprocessData() {
         try {
             TypedQuery<StopRemittanceData> query = em.createQuery("SELECT r FROM StopRemittanceData r  where r.processStatus = 'PENDING'", StopRemittanceData.class);
-            query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+            query.setHint(JAVAX_PERSISTENCE_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
             return query.getResultList();
         } catch (Exception ex) {
             logger.error("Error in getCancelRequestUnprocessData()", ex);
@@ -145,7 +146,7 @@ public class CommonRepository {
             TypedQuery<RemittanceData> query = em.createQuery("SELECT r FROM RemittanceData r  where r.exchangeCode=:exchangeCode and r.middlewarePush = 0 and r.sourceType=:source_type and r.finalStatus IN ('02', '03', '04', '05','07','08','14','15', '22') and r.processStatus IN ('COMPLETED','REJECTED') and r.remittanceMessageType <> 'WEB' ", RemittanceData.class);
             query.setParameter("exchangeCode", exchangeCode);
             query.setParameter("source_type", Constants.API_SOURCE_TYPE);
-            query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+            query.setHint(JAVAX_PERSISTENCE_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
             return query.getResultList();
         } catch (Exception ex) {
             logger.error("Error in getCancelRequestUnprocessData()", ex);
@@ -181,7 +182,7 @@ public class CommonRepository {
             TypedQuery<RemittanceData> query = em.createQuery("SELECT r FROM RemittanceData r  where r.referenceNo = :reference_no and r.referenceDate= :reference_date ", RemittanceData.class);
             query.setParameter("reference_no", refNo);
             query.setParameter("reference_date", refDate);
-            query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+            query.setHint(JAVAX_PERSISTENCE_CACHE_RETRIEVE_MODE, CacheRetrieveMode.BYPASS);
             return !query.getResultList().isEmpty();
         } catch (Exception ex) {
             logger.error("Error in isRemittanceRefNoExist()", ex);
