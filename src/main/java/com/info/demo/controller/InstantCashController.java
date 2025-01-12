@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull;
 
 import static com.info.demo.util.Constants.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/instantCash")
+@CrossOrigin(origins = "localhost:3000", allowCredentials = "true")
 public class InstantCashController {
 
     private final CommonService commonService;
@@ -51,3 +51,5 @@ public class InstantCashController {
     }
 
 }
+
+
