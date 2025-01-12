@@ -66,64 +66,6 @@ public class ICNotifyPaymentStatusRemittanceServiceImpl implements ICNotifyPayme
         this.remittanceProcessService = remittanceProcessService;
     }
 
-
-    @Override
-    @Deprecated
-    public List<RemittanceData> notifyPaymentStatus(ExchangeHouseProperty exchangeHouseProperty, List<RemittanceData> remittanceDataList, final String key, final String agentId, final String password) {
-        if (!ApiUtil.isNonNull(exchangeHouseProperty, key, agentId, password)) {
-            logger.error("Error in notifyPaymentStatus()! ExchangeHouseProperty not exist to notifyPaymentStatus!");
-            return remittanceDataList;
-        }
-
-        AtomicReference<String> request = new AtomicReference<>("");
-        AtomicReference<String> response = new AtomicReference<>("");
-        AtomicReference<Long> traceId = new AtomicReference<>(null);
-        List<ApiTrace> apiTraceList = new ArrayList<>();
-        remittanceDataList.addAll(findAllToNotifyPaidOrRejectedByExchangeCode(exchangeHouseProperty.getExchangeCode()));
-        remittanceDataList = remittanceDataList.stream().distinct().collect(Collectors.toList());
-        List<RemittanceData> notifiedRemittances = new ArrayList<>();
-        Date businessDate = apiTraceService.getCurrentBusinessDate();
-        String uuid = UUID.randomUUID().toString();
-
-        try {
-            remittanceDataList.forEach(remittanceData -> {
-                try {
-                    String newStatus = getStatus(remittanceData.getProcessStatus());
-                    final ApiTrace apiTrace = apiTraceService.create(exchangeHouseProperty.getExchangeCode(), Constants.REQUEST_TYPE_NOTIFY_REM_STATUS, businessDate);
-                    if (Objects.nonNull(apiTrace)) {
-                        traceId.set(apiTrace.getId());
-                        ICConfirmDTO icConfirmDTO = ICConfirmDTO.builder().reference(remittanceData.getReferenceNo()).newStatus(newStatus).remarks("Success").build();
-                        request.set(convertObjectToString(icConfirmDTO));
-                        HttpEntity<ICConfirmDTO> httpEntity = ApiUtil.createHttpEntity(icConfirmDTO, uuid, agentId, key, password);
-                        ResponseEntity<ICConfirmResponseDTO> responseEntity = restTemplate.exchange(exchangeHouseProperty.getKeyValue(), HttpMethod.POST, httpEntity, ICConfirmResponseDTO.class);
-                        response.set(convertObjectToString(responseEntity.getBody()));
-
-                        if (Objects.nonNull(newStatus) && (newStatus.equals(NEW_STATUS_X) || newStatus.equals(NEW_STATUS_Y))) {
-                            updateNotifiedICRemittanceData(responseEntity, remittanceData);
-                            notifiedRemittances.add(remittanceData);
-                        }
-                        logger.info("Execute notifyPaymentStatus for ReferenceNo: {}", remittanceData.getReferenceNo());
-                    }
-                } catch (Exception e) {
-                    response.set(e.getMessage());
-                    logger.error("Error in confirmICOutstandingRemittance for ReferenceNo: {},  ERROR: {}", remittanceData.getReferenceNo(), e.getMessage());
-                }
-                apiTraceList.add(apiTraceService.buildApiTrace(traceId.get(), exchangeHouseProperty.getExchangeCode(), request.get(), response.get(), Constants.REQUEST_TYPE_NOTIFY_REM_STATUS));
-            });
-
-            if (!notifiedRemittances.isEmpty()) {
-                remittanceDataList = remittanceDataService.saveAll(notifiedRemittances);
-            }
-            if (!apiTraceList.isEmpty()) apiTraceService.saveAllApiTrace(apiTraceList);
-
-        } catch (Exception e) {
-            logger.error("Error in confirmICOutstandingRemittance for TraceID: " + traceId.get(), e);
-        }
-
-
-        return remittanceDataList;
-    }
-
     @Override
     public List<RemittanceData> notifyPaymentStatus(ICExchangePropertyDTO icDTO) {
         if (ApiUtil.validateIfICPropertiesIsNotExist(icDTO, icDTO.getNotifyRemStatusUrl())) {

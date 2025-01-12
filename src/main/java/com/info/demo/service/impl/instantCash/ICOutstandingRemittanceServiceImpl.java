@@ -55,62 +55,6 @@ public class ICOutstandingRemittanceServiceImpl implements ICOutstandingRemittan
 
 
     @Override
-    @Deprecated
-    public List<RemittanceData> fetchICOutstandingRemittance(final ExchangeHouseProperty exchangeHouseProperty, final String key, final String agentId, final String password) {
-        List<RemittanceData> remittanceDataArrayList = new ArrayList<>();
-        if (!ApiUtil.isNonNull(exchangeHouseProperty, key, agentId, password)) {
-            logger.error("Error in fetchICOutstandingRemittance()! ExchangeHouseProperty not exist for ICOutstandingRemittance!");
-            return remittanceDataArrayList;
-        }
-
-        final ApiTrace trace = apiTraceService.create(exchangeHouseProperty.getExchangeCode(), Constants.REQUEST_TYPE_DOWNLOAD_REQ, null);
-        StringBuilder response = new StringBuilder();
-        String uuid = UUID.randomUUID().toString();
-        try {
-            if (Objects.isNull(trace)) {
-                logger.info("ERROR in fetchICOutstandingRemittance(), Unable to create apiTrace!");
-                return new ArrayList<>();
-            }
-
-            HttpEntity<String> httpEntity = ApiUtil.createHttpEntity(null, uuid, agentId, key, password);
-            exchangeHouseProperty.setKeyValue("http://localhost:8070/api/OK/fetchICOutstandingRemittance");
-            int pageNumber = 1;
-            List<ICOutstandingTransactionDTO> transactionDTOArrayList = new ArrayList<>();
-            while (pageNumber < 2000) {
-                String outstandingUrl = exchangeHouseProperty.getKeyValue() + "?pageNumber=" + pageNumber + "&pageSize=500";
-                ResponseEntity<ICOutstandingRemittanceDTO> responseEntity = restTemplate.exchange(exchangeHouseProperty.getKeyValue(), HttpMethod.GET, httpEntity, ICOutstandingRemittanceDTO.class);
-
-                if (HttpStatus.OK.equals(responseEntity.getStatusCode()) && Objects.nonNull(responseEntity.getBody())) {
-                    ICOutstandingRemittanceDTO icOutstandingRemittanceDTO = responseEntity.getBody();
-
-                    if (Objects.nonNull(icOutstandingRemittanceDTO) && Objects.nonNull(icOutstandingRemittanceDTO.getData()) && !icOutstandingRemittanceDTO.getData().isEmpty()) {
-                        transactionDTOArrayList.addAll(icOutstandingRemittanceDTO.getData());
-                        response.append(convertObjectToString(responseEntity));
-                        pageNumber++;
-                    } else {
-                        pageNumber = 0;
-                    }
-                }
-            }
-            if (!transactionDTOArrayList.isEmpty()) {
-//                remittanceDataArrayList = prepareAndProcessOutstandingRemittance(transactionDTOArrayList, exchangeHouseProperty, trace);
-                trace.setStatus(Constants.API_STATUS_VALID);
-            } else {
-                logger.info("Tracing removed because no record found, TraceID: " + trace.getId());
-                apiTraceService.deleteById(trace.getId());
-                return remittanceDataArrayList;
-            }
-        } catch (Exception e) {
-            logger.error("Error in fetchICOutstandingRemittance for TraceID: " + trace.getId(), e);
-            trace.setStatus(Constants.API_STATUS_ERROR);
-        }
-        trace.setResponseMsg(response.toString());
-        apiTraceService.save(trace);
-        logger.info("ICOutstandingRemittance download successful!");
-        return remittanceDataArrayList;
-    }
-
-    @Override
     public List<RemittanceData> fetchICOutstandingRemittance(ICExchangePropertyDTO icDTO) {
         List<RemittanceData> remittanceDataArrayList = new ArrayList<>();
         List<ICOutstandingTransactionDTO> transactionDTOArrayList = new ArrayList<>();

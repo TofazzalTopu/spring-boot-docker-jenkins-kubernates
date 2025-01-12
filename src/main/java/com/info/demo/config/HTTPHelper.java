@@ -3,6 +3,9 @@ package com.info.demo.config;
 import javax.servlet.http.HttpServletRequest;
 
 public class HTTPHelper {
+
+	private HTTPHelper() {
+	}
 	
 	public static String getRealClientIpAddr(HttpServletRequest request) {
 		String ip = request.getHeader("X-Forwarded-For");

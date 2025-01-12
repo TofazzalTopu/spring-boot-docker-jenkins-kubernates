@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface ICNotifyPaymentStatusRemittanceService {
 
-   @Deprecated
-    List<RemittanceData> notifyPaymentStatus(ExchangeHouseProperty exchangeHouseProperty, List<RemittanceData> remittanceDataList, final String key, final String agentId, final String password);
 
    List<RemittanceData> notifyPaymentStatus(ICExchangePropertyDTO icExchangePropertyDTO);
 

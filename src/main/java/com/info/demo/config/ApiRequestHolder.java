@@ -2,6 +2,8 @@ package com.info.demo.config;
 
 public abstract class ApiRequestHolder {
 
+	private ApiRequestHolder() {
+	}
 	private static final ThreadLocal<Boolean> threadToken = new ThreadLocal<Boolean>();
 
 	public static boolean isLocal() {

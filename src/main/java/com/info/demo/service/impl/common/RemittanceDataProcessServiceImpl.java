@@ -9,6 +9,7 @@ import com.info.demo.repository.StopRemittanceDataRepository;
 import com.info.demo.service.common.ApiTraceService;
 import com.info.demo.service.common.RemittanceDataService;
 import com.info.demo.service.common.RemittanceProcessMasterService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,7 +29,7 @@ public class RemittanceDataProcessServiceImpl {
     private final StopRemittanceDataRepository stopRemittanceDataRepository;
     private final RemittanceProcessMasterService remittanceProcessMasterService;
 
-    public RemittanceDataProcessServiceImpl(ApiTraceService apiTraceService, CommonRepository commonRepository, RemittanceDataService remittanceDataService, StopRemittanceDataRepository stopRemittanceDataRepository, RemittanceProcessMasterService remittanceProcessMasterService) {
+    public RemittanceDataProcessServiceImpl(ApiTraceService apiTraceService, CommonRepository commonRepository, @Lazy RemittanceDataService remittanceDataService, StopRemittanceDataRepository stopRemittanceDataRepository, RemittanceProcessMasterService remittanceProcessMasterService) {
         this.apiTraceService = apiTraceService;
         this.commonRepository = commonRepository;
         this.remittanceDataService = remittanceDataService;

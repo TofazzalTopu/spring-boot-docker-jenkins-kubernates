@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface ICOutstandingRemittanceService {
 
-    @Deprecated
-    List<RemittanceData> fetchICOutstandingRemittance(ExchangeHouseProperty exchangeHouseProperty, final String key, final String agentId,  final String password);
     List<RemittanceData> fetchICOutstandingRemittance(ICExchangePropertyDTO icExchangePropertyDTO);
 
 

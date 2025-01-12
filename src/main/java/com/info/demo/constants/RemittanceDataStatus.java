@@ -2,6 +2,9 @@ package com.info.demo.constants;
 
 public class RemittanceDataStatus {
 
+    private RemittanceDataStatus() {
+    }
+
     public static final String INVALID = "INVALID";
     public static final String VALID = "VALID";
     public static final String POSTED = "POSTED";
