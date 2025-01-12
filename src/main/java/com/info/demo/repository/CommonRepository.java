@@ -63,7 +63,7 @@ public class CommonRepository {
             }
 
         } catch (Exception ex) {
-            logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
+            logger.error("Error in getExchangeHouseDownloadableKey() {} ", ex.getMessage());
         }
 
         return map;
@@ -82,7 +82,7 @@ public class CommonRepository {
                 return (String) resultList.get(0);
             }
         } catch (Exception ex) {
-            logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
+            logger.error("Error in getExchangeHousePropValue() {} ", ex.getMessage());
         }
 
         return "";
@@ -170,7 +170,7 @@ public class CommonRepository {
             }
 
         } catch (Exception ex) {
-            logger.error("Error in getExchangeHouseProp() {} ", ex.getMessage());
+            logger.error("Error in getCBSLocalUser() {} ", ex.getMessage());
         }
 
         return local;

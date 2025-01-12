@@ -63,7 +63,7 @@ public class InstantCashAPIProcessor {
 //                SearchApiResponse remittanceData = icPaymentReceiveService.paymentReceive("000007141", icExchangePropertyDTO);
                 logger.info("InstantCashAPIProcessor ended.");
             } catch (Exception ex) {
-                System.out.println(ex.getLocalizedMessage());
+                logger.error(ex.getLocalizedMessage());
             }
         } else {
             logger.info("Instant Cash API Properties is missing. Please add properties in the DB.");
