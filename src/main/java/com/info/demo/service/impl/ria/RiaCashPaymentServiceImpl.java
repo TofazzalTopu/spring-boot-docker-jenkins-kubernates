@@ -41,7 +41,7 @@ public class RiaCashPaymentServiceImpl implements RiaCashPaymentService {
     private final RiaExchangeHouseApiService riaExchangeHouseApiService;
 
 
-    @Value("#{${bank.code}}")
+    @Value("${bank.code}")
     private String bankCode;
 
     @Value("${bank.name}")

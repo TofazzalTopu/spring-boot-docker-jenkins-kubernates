@@ -44,7 +44,7 @@ public class RiaExchangeHouseApiServiceImpl implements RiaExchangeHouseApiServic
 
     private final RiaRemittanceMapper riaRemittanceMapper;
 
-    @Value("#{${bank.code}}")
+    @Value("${bank.code}")
     private String bankCode;
 
     @Value("${RIA_EXCHANGE_HOUSE_BRANCH_USER_DEVICE_ID:HOST}")

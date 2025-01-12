@@ -26,7 +26,7 @@ public class ICPaymentReceiveRemittanceMapper {
 
     private final CommonService commonService;
 
-    @Value("#{${bank.code}}")
+    @Value("${bank.code}")
     private String bankCode;
 
     public ICPaymentReceiveRemittanceMapper(CommonService commonService) {

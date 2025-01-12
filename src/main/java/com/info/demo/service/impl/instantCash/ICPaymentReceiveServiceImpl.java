@@ -50,7 +50,7 @@ public class ICPaymentReceiveServiceImpl implements ICPaymentReceiveService {
     private final ICCashRemittanceDataService icCashRemittanceDataService;
 
 
-    @Value("#{${bank.code}}")
+    @Value("${bank.code}")
     private String bankCode;
 
     public ICPaymentReceiveServiceImpl(RestTemplate restTemplate, CommonService commonService, ApiTraceService apiTraceService, ICPaymentReceiveRemittanceMapper mapper, ICCashRemittanceDataService icCashRemittanceDataService) {

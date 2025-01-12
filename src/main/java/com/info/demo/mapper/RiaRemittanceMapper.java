@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class RiaRemittanceMapper {
     private static final Logger logger = LoggerFactory.getLogger(RiaRemittanceMapper.class);
 
-    @Value("#{${bank.code}}")
+    @Value("${bank.code}")
     private String bankCode;
 
     private final BranchService branchService;

@@ -26,7 +26,7 @@ public class ICOutstandingRemittanceMapper {
 
     private final CommonService commonService;
 
-    @Value("#{${bank.code}}")
+    @Value("${bank.code}")
     private String bankCode;
 
 
