@@ -1,5 +1,5 @@
 # -------- Base Image --------
-FROM eclipse-temurin:11-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 
 # -------- Metadata (optional but recommended) --------
 LABEL application="spring-boot-docker"
