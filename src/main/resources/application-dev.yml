@@ -1,0 +1,6 @@
+logging:
+  file:
+    path: ${user.home}/ApplicationLog
+
+  level:
+    root: DEBUG

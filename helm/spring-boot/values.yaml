@@ -5,17 +5,47 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
+imagePullSecrets: []
+# Example:
+# imagePullSecrets:
+#   - name: dockerhub-secret
+
+containerPort: 8081
+
 service:
   type: NodePort
   port: 8081
   targetPort: 8081
 
-containerPort: 8081
+spring:
+  profile: prod
 
-resources: {}
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+readinessProbe:
+  enabled: true
+  path: /actuator/health
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+livenessProbe:
+  enabled: true
+  path: /actuator/health
+  initialDelaySeconds: 60
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 3
 
 nodeSelector: {}
 
 tolerations: []
 
-affinity: []
+affinity: {}

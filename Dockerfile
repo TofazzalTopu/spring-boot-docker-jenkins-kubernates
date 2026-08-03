@@ -7,9 +7,15 @@ LABEL application="spring-boot-docker"
 # -------- App Directory --------
 WORKDIR /app
 
+RUN apt-get update && \
+    apt-get install -y wget && \
+    rm -rf /var/lib/apt/lists/* \
+
 # -------- Security: Non-root user --------
 RUN groupadd -r appgroup && \
-    useradd -r -g appgroup appuser
+    useradd -r -g appgroup appuser && \
+    mkdir -p /app/log && \
+    chown -R appuser:appgroup /app
 
 # -------- Copy Artifact --------
 COPY target/spring-boot-docker.jar spring-boot-docker.jar

@@ -1,0 +1,19 @@
+git
+git-client
+github
+github-api
+github-branch-source
+workflow-aggregator
+pipeline-stage-view
+docker-workflow
+credentials
+ssh-credentials
+configuration-as-code
+blueocean
+kubernetes
+sonar
+
+
+# Then install them during the Jenkins image build:
+# COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+# RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
