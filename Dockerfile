@@ -19,6 +19,8 @@ COPY target/spring-boot-docker.jar spring-boot-docker.jar
 # -------- Set Ownership --------
 RUN chown appuser:appgroup spring-boot-docker.jar
 
+RUN chown -R appuser:appgroup /app
+
 # -------- Switch User --------
 USER appuser
 
