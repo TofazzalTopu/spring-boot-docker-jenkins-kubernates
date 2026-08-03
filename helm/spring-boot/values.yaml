@@ -1,0 +1,21 @@
+replicaCount: 3
+
+image:
+  repository: tofazzal/spring-boot-docker
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8081
+  targetPort: 8081
+
+containerPort: 8081
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: []

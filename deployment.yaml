@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spring-boot-docker
-          image: tofazzal/spring-boot-docker.jar:latest
+          image: tofazzal/spring-boot-docker:latest
           # Image that will be used to containers in the cluster
           imagePullPolicy: IfNotPresent
           ports:
@@ -33,4 +33,4 @@ spec:
     - protocol: "TCP"
       port: 8081 # The port that the service is running on in the cluster
       targetPort: 8081 # The port exposed by the service
-  type: NodePort # type of the service.
+  type: NodePort # type of the ser  vice.
