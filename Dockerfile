@@ -9,9 +9,7 @@ WORKDIR /app
 
 # -------- Security: Non-root user --------
 RUN groupadd -r appgroup && \
-    useradd -r -g appgroup appuser    && \
-    mkdir -p /app/log && \
-    chown -R appuser:appgroup /app
+    useradd -r -g appgroup appuser
 
 # -------- Copy Artifact --------
 COPY target/spring-boot-docker.jar spring-boot-docker.jar
@@ -19,7 +17,6 @@ COPY target/spring-boot-docker.jar spring-boot-docker.jar
 # -------- Set Ownership --------
 RUN chown appuser:appgroup spring-boot-docker.jar
 
-RUN chown -R appuser:appgroup /app
 
 # -------- Switch User --------
 USER appuser
