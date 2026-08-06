@@ -1,5 +1,18 @@
 spring:
   application:
     name: welcome-service
+  profiles:
+    active: prod
+
 server:
   port: 8081
+
+api_channel: abc
+api_channel_user: abcd
+app_server: local
+bank.code: 123
+bank.name: abc
+RIA_EXCHANGE_HOUSE_BRANCH_USER_DEVICE_ID: 123
+INSTANT_CASH_API_USER_ID: 123
+INSTANT_CASH_API_USER_RECEIVE_PAYMENT_API_USER_ID: 123
+INSTANT_CASH_API_USER_PASSWORD: 123

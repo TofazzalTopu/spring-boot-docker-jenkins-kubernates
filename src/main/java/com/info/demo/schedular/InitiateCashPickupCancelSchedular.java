@@ -29,7 +29,7 @@ public class InitiateCashPickupCancelSchedular {
 		this.riaExchangeHouseApiService = riaExchangeHouseApiService;
 	}
 
-	@Scheduled(fixedRate = 1000 * 60 * 5)
+//	@Scheduled(fixedRate = 1000 * 60 * 5)
 	public void scheduleFixedRateTask() {
 		logger.info("InitiateCashPickupCancelSchedular: Schedular has been started to pull the cancellable data of cash pickup");
 		List<String> tranNoListForUpdateRequired = searchAndInitiateCancel();

@@ -29,7 +29,7 @@ public class ApiClientScheduler {
         this.exchangeHousePropertyService = exchangeHousePropertyService;
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 5)
+//    @Scheduled(fixedDelay = 1000 * 60 * 5)
     public void apiClientScheduler() {
         logger.info("ICScheduler started.");
         ExecutorService instantCashExecutor = Executors.newFixedThreadPool(1);

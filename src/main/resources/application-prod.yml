@@ -2,8 +2,7 @@ spring:
   application:
     name: spring-boot-docker
 
-  profiles:
-    active: prod
+
 
   management:
     server:

@@ -13,7 +13,7 @@ public class DataSourceConfig {
 	@Value("${spring.datasource.password}")
 	private String dataSourcePassword;
 	
-	@Value("${server}")
+	@Value("${app_server}")
 	private String server;
 
 	public String getDataSourcePassword() {
