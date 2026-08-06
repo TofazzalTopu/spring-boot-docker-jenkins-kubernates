@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Slf4j
-@Component
+//@Component
 public class RequestFilter implements Filter {
 
 	private MCbsApiChannel localReq = null;
